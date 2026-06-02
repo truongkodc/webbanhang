@@ -70,13 +70,17 @@ canvas#bg {
                 <span class="badge badge-info"><?= htmlspecialchars($product->category_name, ENT_QUOTES, 'UTF-8') ?></span>
             </div>
 
-            <div class="card-footer d-flex justify-content-between">
-                <a href="/webbanhang/Product/edit/<?= $product->id ?>"
-                   class="btn btn-warning btn-sm">✏️ Sửa</a>
-                <a href="/webbanhang/Product/delete/<?= $product->id ?>"
-                   class="btn btn-danger btn-sm"
-                   onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')">🗑️ Xóa</a>
-            </div>
+            <div class="card-footer">
+    <div class="d-flex justify-content-between mb-2">
+        <a href="/webbanhang/Product/edit/<?= $product->id ?>"
+           class="btn btn-warning btn-sm">✏️ Sửa</a>
+        <a href="/webbanhang/Product/delete/<?= $product->id ?>"
+           class="btn btn-danger btn-sm"
+           onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')">🗑️ Xóa</a>
+    </div>
+    <a href="/webbanhang/Product/addToCart/<?= $product->id ?>"
+       class="btn btn-primary btn-sm btn-block">🛒 Thêm vào giỏ hàng</a>
+</div>
 
         </div>
     </div>
