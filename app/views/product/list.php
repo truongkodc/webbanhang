@@ -84,6 +84,8 @@ canvas#bg {
         <a href="/webbanhang/Product/addToCart/<?= $product->id ?>"
            class="btn btn-primary btn-sm btn-block">🛒 Thêm vào giỏ hàng</a>
 
+             </div>
+              </div>
     </div>
 </div>
 <?php endforeach; ?>
