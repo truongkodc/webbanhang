@@ -1,64 +1,67 @@
--- --------------------------------------------------------
--- Host:                         127.0.0.1
--- Server version:               8.0.30 - MySQL Community Server - GPL
--- Server OS:                    Win64
--- HeidiSQL Version:             12.1.0.6537
--- --------------------------------------------------------
+-- Xóa database cũ nếu đã tồn tại
+DROP DATABASE IF EXISTS my_store;
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET NAMES utf8 */;
-/*!50503 SET NAMES utf8mb4 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+-- Tạo mới database và sử dụng nó
+CREATE DATABASE my_store;
+USE my_store;
+
+-- Tạo bảng account 
+CREATE TABLE account (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(255) NOT NULL UNIQUE,
+	fullname VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+	role ENUM('admin', 'user') DEFAULT 'user'
+);
 
 
--- Dumping database structure for my_store
-CREATE DATABASE IF NOT EXISTS `my_store` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `my_store`;
+-- Tạo bảng danh mục sản phẩm
+CREATE TABLE category (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    description TEXT
+);
 
--- Dumping structure for table my_store.category
-CREATE TABLE IF NOT EXISTS `category` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) NOT NULL,
-  `description` text,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+-- Tạo bảng sản phẩm
+CREATE TABLE product (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    description TEXT,
+    price DECIMAL(10,2) NOT NULL,
+    image VARCHAR(255) DEFAULT NULL,
+    category_id INT,
+    FOREIGN KEY (category_id) REFERENCES category(id) ON DELETE CASCADE
+);
 
--- Dumping data for table my_store.category: ~5 rows (approximately)
-INSERT INTO `category` (`id`, `name`, `description`) VALUES
-	(1, 'Điện thoại', 'Danh mục các loại điện thoại'),
-	(2, 'Laptop', 'Danh mục các loại laptop'),
-	(3, 'Máy tính bảng', 'Danh mục các loại máy tính bảng'),
-	(4, 'Phụ kiện', 'Danh mục phụ kiện điện tử'),
-	(5, 'Thiết bị âm thanh', 'Danh mục loa, tai nghe, micro');
+-- Tạo bảng đơn hàng
+CREATE TABLE orders (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    phone VARCHAR(20) NOT NULL,
+    address TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
--- Dumping structure for table my_store.product
-CREATE TABLE IF NOT EXISTS `product` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) NOT NULL,
-  `description` text,
-  `price` decimal(10,2) NOT NULL,
-  `image` varchar(255) DEFAULT NULL,
-  `category_id` int DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `category_id` (`category_id`),
-  CONSTRAINT `product_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+-- Tạo bảng chi tiết đơn hàng
+CREATE TABLE order_details (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT NOT NULL,
+    product_id INT NOT NULL,
+    quantity INT NOT NULL,
+    price DECIMAL(10,2) NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE
+);
 
--- Dumping data for table my_store.product: ~0 rows (approximately)
-INSERT INTO `product` (`id`, `name`, `description`, `price`, `image`, `category_id`) VALUES
-	(2, 'iPhone 15', 'Điện thoại Apple mới nhất', 25000000.00, '', 1),
-	(3, 'Samsung Galaxy S24', 'Điện thoại Android cao cấp', 20000000.00, '', 1),
-	(4, 'MacBook Pro', 'Laptop Apple chip M3', 45000000.00, '', 2),
-	(5, 'Dell XPS 15', 'Laptop cao cấp cho dân văn phòng', 35000000.00, 'uploads/1-7.png', 2),
-	(6, 'iPad Air', 'Máy tính bảng Apple', 18000000.00, 'uploads/ipad-pro-m5-11-inch-wifi-1.jpg', 3),
-	(7, 'AirPods Pro', 'Tai nghe không dây chống ồn', 6000000.00, '', 4);
+-- Chèn dữ liệu mẫu vào bảng category
+INSERT INTO category (name, description) VALUES
+('Điện thoại', 'Danh mục các loại điện thoại'),
+('Laptop', 'Danh mục các loại laptop'),
+('Máy tính bảng', 'Danh mục các loại máy tính bảng'),
+('Phụ kiện', 'Danh mục phụ kiện điện tử'),
+('Thiết bị âm thanh', 'Danh mục loa, tai nghe, micro');
 
-/*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
-/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
-/*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40111 SET SQL_NOTES=IFNULL(@OLD_SQL_NOTES, 1) */;
+-- Tạo index để tối ưu truy vấn
+CREATE INDEX idx_product_category ON product(category_id);
+CREATE INDEX idx_order_details_order ON order_details(order_id);
+CREATE INDEX idx_order_details_product ON order_details(product_id);
