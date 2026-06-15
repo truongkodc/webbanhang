@@ -18,7 +18,6 @@ class ProductModel
                 p.name,
                 p.description,
                 p.price,
-                p.image,
                 c.name AS category_name
             FROM " . $this->table_name . " p
             LEFT JOIN category c ON p.category_id = c.id
@@ -41,7 +40,7 @@ class ProductModel
         return $stmt->fetch(PDO::FETCH_OBJ);
     }
 
-    public function addProduct($name, $description, $price, $category_id, $image)
+    public function addProduct($name, $description, $price, $category_id)
     {
         $errors = $this->validateProduct($name, $description, $price);
 
@@ -51,18 +50,18 @@ class ProductModel
 
         $query = "
             INSERT INTO " . $this->table_name . "
-                (name, description, price, category_id, image)
+                (name, description, price, category_id)
             VALUES
-                (:name, :description, :price, :category_id, :image)
+                (:name, :description, :price, :category_id)
         ";
 
         $stmt = $this->conn->prepare($query);
-        $this->bindProductData($stmt, $name, $description, $price, $category_id, $image);
+        $this->bindProductData($stmt, $name, $description, $price, $category_id);
 
         return $stmt->execute();
     }
 
-    public function updateProduct($id, $name, $description, $price, $category_id, $image)
+    public function updateProduct($id, $name, $description, $price, $category_id)
     {
         $query = "
             UPDATE " . $this->table_name . "
@@ -70,14 +69,13 @@ class ProductModel
                 name = :name,
                 description = :description,
                 price = :price,
-                category_id = :category_id,
-                image = :image
+                category_id = :category_id
             WHERE id = :id
         ";
 
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':id', $id);
-        $this->bindProductData($stmt, $name, $description, $price, $category_id, $image);
+        $this->bindProductData($stmt, $name, $description, $price, $category_id);
 
         return $stmt->execute();
     }
@@ -111,19 +109,19 @@ class ProductModel
         return $errors;
     }
 
-    private function bindProductData($stmt, $name, $description, $price, $category_id, $image)
+    private function bindProductData($stmt, $name, $description, $price, $category_id)
     {
         $name = $this->sanitize($name);
         $description = $this->sanitize($description);
         $price = $this->sanitize($price);
         $category_id = $this->sanitize($category_id);
-        $image = $this->sanitize($image);
+        
 
         $stmt->bindValue(':name', $name);
         $stmt->bindValue(':description', $description);
         $stmt->bindValue(':price', $price);
         $stmt->bindValue(':category_id', $category_id);
-        $stmt->bindValue(':image', $image);
+      
     }
 
     private function sanitize($value)
