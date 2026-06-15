@@ -5,15 +5,14 @@ DROP DATABASE IF EXISTS my_store;
 CREATE DATABASE my_store;
 USE my_store;
 
--- Tạo bảng account 
+-- Tạo bảng account
 CREATE TABLE account (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(255) NOT NULL UNIQUE,
-	fullname VARCHAR(255) NOT NULL,
+    fullname VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
-	role ENUM('admin', 'user') DEFAULT 'user'
+    role ENUM('admin', 'user') DEFAULT 'user'
 );
-
 
 -- Tạo bảng danh mục sản phẩm
 CREATE TABLE category (
@@ -27,7 +26,7 @@ CREATE TABLE product (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     description TEXT,
-    price DECIMAL(10,2) NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
     image VARCHAR(255) DEFAULT NULL,
     category_id INT,
     FOREIGN KEY (category_id) REFERENCES category(id) ON DELETE CASCADE
@@ -48,18 +47,18 @@ CREATE TABLE order_details (
     order_id INT NOT NULL,
     product_id INT NOT NULL,
     quantity INT NOT NULL,
-    price DECIMAL(10,2) NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
     FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE
 );
 
 -- Chèn dữ liệu mẫu vào bảng category
 INSERT INTO category (name, description) VALUES
-('Điện thoại', 'Danh mục các loại điện thoại'),
-('Laptop', 'Danh mục các loại laptop'),
-('Máy tính bảng', 'Danh mục các loại máy tính bảng'),
-('Phụ kiện', 'Danh mục phụ kiện điện tử'),
-('Thiết bị âm thanh', 'Danh mục loa, tai nghe, micro');
+    ('Điện thoại', 'Danh mục các loại điện thoại'),
+    ('Laptop', 'Danh mục các loại laptop'),
+    ('Máy tính bảng', 'Danh mục các loại máy tính bảng'),
+    ('Phụ kiện', 'Danh mục phụ kiện điện tử'),
+    ('Thiết bị âm thanh', 'Danh mục loa, tai nghe, micro');
 
 -- Tạo index để tối ưu truy vấn
 CREATE INDEX idx_product_category ON product(category_id);

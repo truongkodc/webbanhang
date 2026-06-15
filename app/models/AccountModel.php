@@ -1,44 +1,45 @@
 <?php
+
 class AccountModel
 {
+    private $conn;
+    private $table_name = "account";
 
-private $conn;
+    public function __construct($db)
+    {
+        $this->conn = $db;
+    }
 
-private $table_name = "account";
+    public function getAccountByUsername($username)
+    {
+        $query = "SELECT * FROM " . $this->table_name . " WHERE username = :username";
 
-public function __construct($db)
-{
-$this->conn = $db;
-}
-public function getAccountByUsername($username)
-{
-    $query = "SELECT * FROM account WHERE username = :username";
-    $stmt = $this->conn->prepare($query);
-    $stmt->bindParam(':username', $username, PDO::PARAM_STR);
-    $stmt->execute();
-    $result = $stmt->fetch(PDO::FETCH_OBJ);
-return $result;
-}
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+        $stmt->execute();
 
-function save($username, $name, $password, $role="user"){
-    $query = "INSERT INTO " . $this->table_name . 
-    "(username, fullname, password, role) 
-    VALUES (:username,:fullname,:password, :role)";
-   
-    $stmt = $this->conn->prepare($query);
-// Làm sạch dữ liệu
-$name = htmlspecialchars(strip_tags($name));
-$username = htmlspecialchars(strip_tags($username));
+        return $stmt->fetch(PDO::FETCH_OBJ);
+    }
 
-// Gán dữ liệu vào câu lệnh
-    $stmt->bindParam(':username', $username);
-    $stmt->bindParam(':fullname', $name); 
-    $stmt->bindParam(':password', $password);
-    $stmt->bindParam(':role', $role);
-// Thực thi câu lệnh
-if ($stmt->execute()) {
-    return true;
-     }
-    return false;
+    public function save($username, $name, $password, $role = "user")
+    {
+        $query = "
+            INSERT INTO " . $this->table_name . "
+                (username, fullname, password, role)
+            VALUES
+                (:username, :fullname, :password, :role)
+        ";
+
+        $stmt = $this->conn->prepare($query);
+
+        $name = htmlspecialchars(strip_tags($name));
+        $username = htmlspecialchars(strip_tags($username));
+
+        $stmt->bindParam(':username', $username);
+        $stmt->bindParam(':fullname', $name);
+        $stmt->bindParam(':password', $password);
+        $stmt->bindParam(':role', $role);
+
+        return $stmt->execute();
     }
 }

@@ -1,9 +1,10 @@
 <?php
+
 class DefaultController
 {
-    public function index() {
+    public function index()
+    {
         header('Location: /webbanhang/product');
         exit();
     }
 }
-?>
