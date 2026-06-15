@@ -17,7 +17,7 @@
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">Quản lý sản phẩm</a>
+    <a class="navbar-brand" href="/webbanhang/Product/">Quản lý sản phẩm</a>
 
     <button
         class="navbar-toggler"
@@ -35,6 +35,10 @@
         <ul class="navbar-nav">
             <li class="nav-item">
                 <a class="nav-link" href="/webbanhang/Product/">Danh sách sản phẩm</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="/webbanhang/Category/list">Danh mục</a>
             </li>
 
             <?php if (SessionHelper::isAdmin()): ?>
