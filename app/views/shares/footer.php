@@ -1,42 +1,44 @@
-    </div>
+</main>
 
-    <footer class="bg-light text-center text-lg-start mt-4">
-        <div class="container p-4">
-            <div class="row">
-                <div class="col-lg-6 col-md-12 mb-4">
-                    <h5 class="text-uppercase">Quản lý sản phẩm</h5>
-                    <p>
-                        Hệ thống quản lý sản phẩm giúp bạn theo dõi và cập nhật thông tin
-                        sản phẩm dễ dàng.
-                    </p>
-                </div>
+<footer class="app-footer">
+    <div class="container py-4">
+        <div class="row">
+            <div class="col-lg-6 col-md-12 mb-4 mb-lg-0">
+                <h5 class="app-footer-title">Quản lý sản phẩm</h5>
+                <p class="mb-0">
+                    Hệ thống hỗ trợ theo dõi sản phẩm, danh mục và đơn hàng theo cách rõ ràng,
+                    dễ thao tác trong quá trình học và demo.
+                </p>
+            </div>
 
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <h5 class="text-uppercase">Liên kết nhanh</h5>
-                    <ul class="list-unstyled mb-0">
-                        <li>
-                            <a href="/webbanhang/Product/" class="text-dark">Danh sách sản phẩm</a>
-                        </li>
-                        <li>
-                            <a href="/webbanhang/Product/add" class="text-dark">Thêm sản phẩm</a>
-                        </li>
-                    </ul>
-                </div>
+            <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+                <h5 class="app-footer-title">Liên kết nhanh</h5>
+                <ul class="list-unstyled mb-0">
+                    <li><a href="/webbanhang/Product/">Sản phẩm</a></li>
+                    <li><a href="/webbanhang/Category/list">Danh mục</a></li>
+                    <?php if (SessionHelper::isAdmin()): ?>
+                        <li><a href="/webbanhang/Product/add">Thêm sản phẩm</a></li>
+                    <?php endif; ?>
+                </ul>
+            </div>
 
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <h5 class="text-uppercase">Kết nối với chúng tôi</h5>
-                    <a href="#" class="text-dark mr-3"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="text-dark mr-3"><i class="fab fa-twitter"></i></a>
-                    <a href="#" class="text-dark mr-3"><i class="fab fa-instagram"></i></a>
-                </div>
+            <div class="col-lg-3 col-md-6">
+                <h5 class="app-footer-title">Trạng thái</h5>
+                <p class="mb-0">
+                    <?= SessionHelper::isLoggedIn() ? 'Đang đăng nhập' : 'Khách truy cập' ?>
+                </p>
             </div>
         </div>
+    </div>
 
-        <div class="text-center p-3 bg-dark text-white">
-            © 2025 Quản lý sản phẩm. All rights reserved.
-        </div>
-    </footer>
+    <div class="text-center py-3" style="background: #0b1120;">
+        © 2025 Quản lý sản phẩm. All rights reserved.
+    </div>
+</footer>
 
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </body>
 </html>

@@ -1,31 +1,57 @@
 <?php include 'app/views/shares/header.php'; ?>
 
-<h1>Giỏ hàng</h1>
+<div class="page-head">
+    <div>
+        <h1 class="page-title">Giỏ hàng</h1>
+        <p class="page-subtitle">Kiểm tra sản phẩm trước khi chuyển sang bước thanh toán.</p>
+    </div>
+</div>
 
 <?php if (!empty($cart)): ?>
-    <ul class="list-group">
+    <div class="surface surface-pad">
         <?php foreach ($cart as $id => $item): ?>
-            <li class="list-group-item">
-                <h2><?= htmlspecialchars($item['name'], ENT_QUOTES, 'UTF-8') ?></h2>
+            <div class="cart-item p-3 mb-3">
+                <div class="row align-items-center">
+                    <div class="col-md-2 mb-3 mb-md-0">
+                        <?php if ($item['image']): ?>
+                            <img
+                                src="/webbanhang/<?= htmlspecialchars($item['image'], ENT_QUOTES, 'UTF-8') ?>"
+                                alt="<?= htmlspecialchars($item['name'], ENT_QUOTES, 'UTF-8') ?>"
+                                class="img-fluid"
+                                style="border-radius: 8px;"
+                            >
+                        <?php else: ?>
+                            <div class="product-placeholder" style="border-radius: 8px;">Ảnh</div>
+                        <?php endif; ?>
+                    </div>
 
-                <?php if ($item['image']): ?>
-                    <img
-                        src="/webbanhang/<?= htmlspecialchars($item['image'], ENT_QUOTES, 'UTF-8') ?>"
-                        alt="Product Image"
-                        style="max-width: 100px;"
-                    >
-                <?php endif; ?>
+                    <div class="col-md-6">
+                        <h2 class="h5 mb-1"><?= htmlspecialchars($item['name'], ENT_QUOTES, 'UTF-8') ?></h2>
+                        <p class="text-muted mb-md-0">
+                            Số lượng: <?= htmlspecialchars($item['quantity'], ENT_QUOTES, 'UTF-8') ?>
+                        </p>
+                    </div>
 
-                <p>Giá: <?= htmlspecialchars($item['price'], ENT_QUOTES, 'UTF-8') ?> VND</p>
-                <p>Số lượng: <?= htmlspecialchars($item['quantity'], ENT_QUOTES, 'UTF-8') ?></p>
-            </li>
+                    <div class="col-md-4 text-md-right">
+                        <div class="price-text">
+                            <?= number_format($item['price'], 0, ',', '.') ?> VND
+                        </div>
+                    </div>
+                </div>
+            </div>
         <?php endforeach; ?>
-    </ul>
-<?php else: ?>
-    <p>Giỏ hàng của bạn đang trống.</p>
-<?php endif; ?>
 
-<a href="/webbanhang/Product" class="btn btn-secondary mt-2">Tiếp tục mua sắm</a>
-<a href="/webbanhang/Product/checkout" class="btn btn-secondary mt-2">Thanh toán</a>
+        <div class="d-flex flex-wrap justify-content-between mt-4" style="gap: 10px;">
+            <a href="/webbanhang/Product" class="btn btn-outline-secondary">Tiếp tục mua sắm</a>
+            <a href="/webbanhang/Product/checkout" class="btn btn-primary">Thanh toán</a>
+        </div>
+    </div>
+<?php else: ?>
+    <div class="empty-state">
+        <h2 class="h5">Giỏ hàng đang trống</h2>
+        <p class="text-muted">Hãy chọn một vài sản phẩm để bắt đầu đơn hàng.</p>
+        <a href="/webbanhang/Product" class="btn btn-primary">Xem sản phẩm</a>
+    </div>
+<?php endif; ?>
 
 <?php include 'app/views/shares/footer.php'; ?>
