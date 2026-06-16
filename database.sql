@@ -64,3 +64,10 @@ INSERT INTO category (name, description) VALUES
 CREATE INDEX idx_product_category ON product(category_id);
 CREATE INDEX idx_order_details_order ON order_details(order_id);
 CREATE INDEX idx_order_details_product ON order_details(product_id);
+
+INSERT INTO product (name, description, price, image, category_id) VALUES
+('iPhone 15 Pro Max', 'Điện thoại Apple chip A17 Pro, camera 48MP, màn hình 6.7 inch Super Retina XDR', 29990000.00, 'uploads/iphone15promax.jpg', 1),
+('Samsung Galaxy S24 Ultra', 'Điện thoại Samsung bút S Pen, camera 200MP, RAM 12GB, bộ nhớ 256GB', 26990000.00, 'uploads/s24ultra.jpg', 1),
+('MacBook Air M3', 'Laptop Apple chip M3, RAM 8GB, SSD 256GB, màn hình 13.6 inch Liquid Retina', 27990000.00, 'uploads/macbook_air_m3.jpg', 2),
+('iPad Pro 12.9 inch', 'Máy tính bảng Apple chip M2, màn hình Liquid Retina XDR, hỗ trợ Apple Pencil 2', 23990000.00, 'uploads/ipad_pro.jpg', 3),
+('Sony WH-1000XM5', 'Tai nghe chống ồn chủ động hàng đầu, pin 30 giờ, kết nối Bluetooth 5.2', 7490000.00, 'uploads/sony_wh1000xm5.jpg', 5);
