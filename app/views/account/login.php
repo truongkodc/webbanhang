@@ -9,7 +9,11 @@
     </div>
 
     <div class="surface surface-pad">
-        <form action="/webbanhang/account/checklogin" method="post">
+        <div id="login-error" class="alert alert-danger" style="display:none;">
+            Sai tên đăng nhập hoặc mật khẩu.
+        </div>
+
+        <form id="login-form">
             <div class="form-group">
                 <label for="username">Tên đăng nhập</label>
                 <input type="text" id="username" name="username" class="form-control form-control-lg">
@@ -29,5 +33,33 @@
         </form>
     </div>
 </div>
+
+<script>
+document.getElementById('login-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    document.getElementById('login-error').style.display = 'none';
+
+    var username = document.getElementById('username').value;
+    var password = document.getElementById('password').value;
+
+    fetch('/webbanhang/account/checkLogin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: username, password: password })
+    })
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+        if (data.token) {
+            localStorage.setItem('jwtToken', data.token);
+            location.href = '/webbanhang/product';
+        } else {
+            document.getElementById('login-error').style.display = 'block';
+        }
+    })
+    .catch(function() {
+        document.getElementById('login-error').style.display = 'block';
+    });
+});
+</script>
 
 <?php include 'app/views/shares/footer.php'; ?>

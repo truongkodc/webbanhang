@@ -1,39 +1,82 @@
 <?php include 'app/views/shares/header.php'; ?>
-
-<div class="page-head">
-    <div>
-        <h1 class="page-title">Danh mục sản phẩm</h1>
-        <p class="page-subtitle">Các nhóm sản phẩm đang được dùng để tổ chức cửa hàng.</p>
-    </div>
-
-    <span class="badge-soft"><?= count($categories) ?> danh mục</span>
-</div>
-
-<?php if (!empty($categories)): ?>
-    <div class="row">
-        <?php foreach ($categories as $category): ?>
-            <div class="col-md-6 col-lg-4 mb-4">
-                <article class="category-card h-100 p-4">
-                    <div class="text-muted small mb-2">
-                        Mã danh mục #<?= htmlspecialchars($category->id, ENT_QUOTES, 'UTF-8') ?>
-                    </div>
-
-                    <h2 class="h5 font-weight-bold">
-                        <?= htmlspecialchars($category->name, ENT_QUOTES, 'UTF-8') ?>
-                    </h2>
-
-                    <p class="text-muted mb-0">
-                        <?= htmlspecialchars($category->description ?: 'Chưa có mô tả cho danh mục này.', ENT_QUOTES, 'UTF-8') ?>
-                    </p>
-                </article>
-            </div>
-        <?php endforeach; ?>
-    </div>
-<?php else: ?>
-    <div class="empty-state">
-        <h2 class="h5">Chưa có danh mục</h2>
-        <p class="text-muted mb-0">Khi có dữ liệu danh mục, danh sách sẽ hiển thị tại đây.</p>
-    </div>
-<?php endif; ?>
-
+<h1>Danh sách sản phẩm</h1>
+<a href="/webbanhang/Product/add" class="btn btn-success mb-2">Thêm sản phẩm mới</a>
+<ul class="list-group" id="product-list">
+<!-- Danh sách sản phẩm sẽ được tải từ API và hiển thị tại đây -->
+</ul>
 <?php include 'app/views/shares/footer.php'; ?>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+var token = localStorage.getItem('jwtToken');
+if (!token) {
+alert('Vui lòng đăng nhập để xem danh sách sản phẩm.');
+location.href = '/webbanhang/account/login';
+return;
+}
+fetch('/webbanhang/api/product', {
+method: 'GET',
+headers: {
+'Content-Type': 'application/json',
+'Authorization': 'Bearer ' + token
+}
+})
+.then(function(response) {
+if (response.status === 401) {
+alert('Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.');
+localStorage.removeItem('jwtToken');
+location.href = '/webbanhang/account/login';
+return;
+}
+return response.json();
+})
+.then(function(data) {
+if (!data) return;
+var productList = document.getElementById('product-list');
+data.forEach(function(product) {
+var productItem = document.createElement('li');
+productItem.className = 'list-group-item';
+productItem.innerHTML =
+'<h2><a href="/webbanhang/Product/show/' + product.id + '">' +
+
+product.name + '</a></h2>' +
+
+'<p>' + product.description + '</p>' +
+'<p>Giá: ' + product.price + ' VND</p>' +
+'<p>Danh mục: ' + product.category_name + '</p>' +
+
+'<a href="/webbanhang/Product/edit/' + product.id + '" class="btn btn-warning">Sửa</a> ' +
+
+'<button class="btn btn-danger" onclick="deleteProduct(' + product.id
+
++ ')">Xóa</button>';
+
+productList.appendChild(productItem);
+});
+})
+.catch(function() {
+alert('Không thể tải danh sách sản phẩm.');
+});
+});
+function deleteProduct(id) {
+if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')) {
+var token = localStorage.getItem('jwtToken');
+fetch('/webbanhang/api/product/' + id, {
+method: 'DELETE',
+headers: {
+'Authorization': 'Bearer ' + token
+}
+})
+.then(function(response) { return response.json(); })
+.then(function(data) {
+if (data.message === 'Product deleted successfully') {
+location.reload();
+} else {
+alert('Xóa sản phẩm thất bại');
+}
+})
+.catch(function() {
+alert('Xóa sản phẩm thất bại');
+});
+}
+}
+</script>
